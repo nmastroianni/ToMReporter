@@ -7,5 +7,7 @@ Make a copy of [this file](https://docs.google.com/spreadsheets/d/1uf8wSzkYpPbh-
 
 You will need to adjust the code in the Code.gs file so that it points to your new template spreadsheet ID (on line 120). The ID can be found in the [address bar of your new copy](https://wiki.mozilla.org/images/9/91/Google_Spreadsheet_Key_from_url.png).
 
+Here is the "Cheat Sheet" that we will be providing our staff. [Make a Copy for yourself.](https://docs.google.com/document/d/1d2F3UAPXfNR7m0_6u93Y2RUvdIe6dFhsLBPaCM_LdRA/copy)
+
 Lastly, you will need to build out your Data Locker to match.
 Instructions forthcoming.
