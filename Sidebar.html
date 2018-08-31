@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+      .branding-below {
+       bottom: 56px;
+       top: 0;
+    }
+    
+    </style>
+  </head>
+  <body>
+    
+    <div class="sidebar branding-below">
+      <div class="block">
+        <p id="hangIn">
+          Hang in there. We are calculating the number of records in this file.
+        </p>
+      </div>
+      
+      <div class="block form-group">
+        <label for="select">Select the age level for this group</label>
+        <select id="selectGrade" disabled>
+          <option selected>3</option>
+          <option>4</option>
+        </select>
+      </div>
+      <div id="teacherReport" class="block form-group" style="display:none;">
+        <label for="teacher">Since this is a teacher level report, <br />Please Enter Professional Name i.e. Mrs. Pool</label>
+        <input name="teacher" id="teacherName" type="text" placeholder="i.e.Mrs. Pool" size="30">
+        <p id="nameWarning" style="display: none; color: red;">
+        You must enter your professional name before continuing.
+        </p>
+      </div>
+      <div id="sheetsWarning" class="block" style="display: none;">
+        <p style="color: red;">
+        To run this report, you must have only 1 sheet that contains the student data. Move your data sheet to the first position and then click the red Delete Student Sheets button to continue. <strong>Warning! This will delete all but the first sheet.</strong>
+        </p>
+      </div>
+      <div class="block">
+        <button class="blue" id="generate-btn" disabled>Generate Report</button>
+      </div>
+      <div class="block">
+        <button class="red" id="delete-btn">Delete All but the First Sheet</button>
+      </div>
+      <br>
+      <div class="block">
+      <p id="analyze-prompt">Want to analyze the data? We'll need to convert it first. <strong>SELECT the appropriate age above</strong> and then click the button below to get started.</p>
+        <button class="blue" id="convert-btn">Convert & Analyze Data</button>
+        <p style="display: none;" id="convert-success">Data Converted successfully, please check to see if they look as expected.</p>
+      </div>
+      <!--<div class="block">
+        <p>
+          <span id="complete-reports">0</span> have been completed.
+        </p>
+      </div>-->
+    </div>
+    <div class="sidebar bottom" style="background: #004C26;">
+      <span style="color: white;">
+        Tools of the Mind Report Generator <br>by Neil Mastroianni
+      </span>
+    </div>
+    <script>
+      $( document ).ready(function() {
+        onSidebarLoad();
+      });
+      var total_students;
+      var teacher_report = false;
+      function scanComplete(obj) {
+         total_students = obj.students;
+         
+         if (obj) {
+            $('#hangIn').text('There are ' + obj.students + ' students in this file. If that sounds correct, please select the grade level and then click "Generate Report".');
+            $('#selectGrade').removeAttr('disabled');
+             if (obj.type == "Teacher") {
+             google.script.run
+             .teacherAdjust();
+             $('#teacherReport').show();
+             teacher_report = true;
+             } else if (obj.type == "Building") {
+             google.script.run
+             .buildingAdjust();
+             } else if (obj.type == "District") {
+             google.script.run
+             .districtAdjust();
+             }
+             $('#generate-btn').removeAttr('disabled');
+         } else if (obj === false) {
+           $('#hangIn').hide();
+           $('#sheetsWarning').show();
+         }
+     }
+     
+      function onSidebarLoad() {
+        google.script.run
+          .withSuccessHandler(scanComplete)
+          .scanData();
+     }
+     $('#generate-btn').click(generateBtn);
+     $('#delete-btn').click(deleteSheets);
+     $('#convert-btn').click(convertData);
+     
+     function generateBtn() {
+       if (teacher_report) {
+         if ($('#teacherName').val() == "") {
+           $('#nameWarning').show();
+         } else{
+         this.disabled = true;
+         $('#nameWarning').hide();
+         var teacher = $('#teacherName').val();
+         google.script.run
+            .withSuccessHandler(callBuildEmptyReport)
+            .makeSheets(teacher);
+         }
+       } else {
+         this.disabled = true;
+         google.script.run
+            .withSuccessHandler(callBuildEmptyReport)
+            .makeSheets();
+       }
+     }
+     
+     function deleteSheets() {
+       google.script.run.delSheets();
+     }
+     
+     function convertData() {
+     var selectedGrade = $('#selectGrade option:selected').val();
+       google.script.run
+         .withSuccessHandler(function(){
+           console.log("Data conversion success")
+           
+           google.script.run
+             .withSuccessHandler(function(){
+               $("#convert-success").show();
+               $("#convert-btn").hide();
+               $("#analyze-prompt").hide();
+             })
+             .buildAnalysis();
+         })
+         .withFailureHandler(function(){
+           console.log("Data conversion failure")
+         })
+         .convertData(selectedGrade);
+     }
+
+     function callBuildEmptyReport() {
+       var selectedGrade = $('#selectGrade option:selected').val();
+       for (i=0; i<total_students; i++) {
+         google.script.run
+           .withSuccessHandler(callFinishReport)
+           .buildEmptyReport(i,selectedGrade);
+       }
+     }
+     function callFinishReport(count) {
+       google.script.run
+         .withSuccessHandler(reportComplete)
+         .finishReport(count);
+       
+     }
+     function reportComplete(count) {
+       //$('#complete-reports').text(count);
+       //console.log(count);
+     }
+    </script>
+  </body>
+</html>
+
+
