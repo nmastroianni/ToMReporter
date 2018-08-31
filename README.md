@@ -5,7 +5,7 @@ It is recommended that this project be installed on a G Suite for Education doma
 
 Make a copy of [this file](https://docs.google.com/spreadsheets/d/1uf8wSzkYpPbh-Cx0ouFeJDPsKMb_5IJoMPVzH35fn4A/copy) 
 
-You will need to adjust the code in the Code.gs file so that it points to your new template spreadsheet ID (on line 120). The ID can be found in the [address bar of your new copy](https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiDjefe85fdAhVKON8KHf1WCSIQjRx6BAgBEAU&url=https%3A%2F%2Fahrefs.com%2Fblog%2Fgoogle-sheets-formulas-seo%2F&psig=AOvVaw1Y7XzPor5Gh-Xhhfm2L7mO&ust=1535825954147900).
+You will need to adjust the code in the Code.gs file so that it points to your new template spreadsheet ID (on line 120). The ID can be found in the [address bar of your new copy](https://wiki.mozilla.org/images/9/91/Google_Spreadsheet_Key_from_url.png).
 
 Lastly, you will need to build out your Data Locker to match.
 Instructions forthcoming.
